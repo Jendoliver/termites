@@ -1,0 +1,16 @@
+plugins {
+	id 'java'
+}
+
+repositories {
+    jcenter()
+    maven {url 'http://bits.netbeans.org/maven2/'}
+}
+
+dependencies {
+	// https://mvnrepository.com/artifact/org.slf4j/slf4j-log4j12
+	testCompile group: 'org.slf4j', name: 'slf4j-log4j12', version: '1.7.25'
+
+    // https://mvnrepository.com/artifact/org.netbeans.external/AbsoluteLayout
+	compile group: 'org.netbeans.external', name: 'AbsoluteLayout', version: 'RELEASE82'
+}
