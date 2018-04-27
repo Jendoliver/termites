@@ -24,6 +24,11 @@ public class AntBasic implements AntAlgorithm
 		this.j = col > 0 ? Math.min(col, board.getWidth() - 1) : 0;
 	}
 
+	public Pattern getPattern()
+	{
+		return pattern;
+	}
+
 	public void setPattern(Pattern pattern)
 	{
 		this.pattern = pattern;

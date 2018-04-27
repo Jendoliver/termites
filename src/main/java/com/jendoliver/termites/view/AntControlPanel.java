@@ -45,6 +45,11 @@ public class AntControlPanel extends JPanel
 		separator.setBounds(300, 11, 2, 128);
 		add(separator);
 
+		JSpinner msBetweenFrames = new JSpinner();
+		msBetweenFrames.setModel(new SpinnerNumberModel(1, 1, 1000, 1));
+		msBetweenFrames.setBounds(480, 56, 90, 20);
+		add(msBetweenFrames);
+
 		JButton btnSimulate = new JButton("SIMULATE");
 		btnSimulate.addMouseListener(new MouseAdapter()
 		{
@@ -52,6 +57,13 @@ public class AntControlPanel extends JPanel
 			public void mouseClicked(MouseEvent arg0)
 			{
 				ant.setPatternAndRestart(PatternFactory.createFromString(turnsPattern.getText()));
+				Applet.setRefreshRate((Integer)msBetweenFrames.getValue());
+				try
+				{
+					msBetweenFrames.commitEdit();
+					Applet.setRefreshRate((Integer)msBetweenFrames.getValue());
+				}
+				catch (java.text.ParseException e) { /* Ignored */ }
 			}
 		});
 		btnSimulate.setFont(new Font("Yu Gothic UI", Font.BOLD, 20));
@@ -68,20 +80,23 @@ public class AntControlPanel extends JPanel
 		separator2.setBounds(607, 11, 2, 128);
 		add(separator2);
 
-		JSpinner msBetweenFrames = new JSpinner();
-		msBetweenFrames.setModel(new SpinnerNumberModel(1, 0, 1000, 1));
-		msBetweenFrames.setBounds(480, 56, 90, 20);
-		add(msBetweenFrames);
-
 		JButton btnRandomize = new JButton("RANDOMIZE");
 		btnRandomize.addMouseListener(new MouseAdapter()
 		{
 			@Override
 			public void mouseClicked(MouseEvent arg0)
 			{
-				ant.setPatternAndRestart(PatternFactory.createRandom(ApplicationProperties.getMaxPatternSize()));
-				Applet.setRefreshRate((int)msBetweenFrames.getValue());
+				ant.setPatternAndRestart(
+						PatternFactory.createRandom(ApplicationProperties.getMaxPatternSize()));
 
+				turnsPattern.setText(ant.getPattern().toString());
+
+				try
+				{
+					msBetweenFrames.commitEdit();
+					Applet.setRefreshRate((Integer)msBetweenFrames.getValue());
+				}
+				catch (java.text.ParseException e) { /* Ignored */ }
 			}
 		});
 		btnRandomize.setFont(new Font("Yu Gothic UI", Font.BOLD, 20));
