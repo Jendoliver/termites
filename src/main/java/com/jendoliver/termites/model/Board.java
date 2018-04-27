@@ -14,14 +14,14 @@ public class Board
 		this.width = width;
 		this.height = height;
 		matrix = new Color[height][width];
-		clear();
+		fillBackground();
 	}
 
-	public void clear()
+	public void fillBackground()
 	{
-		for(int i = 0; i < height; i++)
+		for (int i = 0; i < height; i++)
 		{
-			for(int j = 0; j < width; j++)
+			for (int j = 0; j < width; j++)
 			{
 				matrix[i][j] = Color.BLACK;
 			}
@@ -41,5 +41,18 @@ public class Board
 	public final Color[][] getMatrix()
 	{
 		return matrix;
+	}
+
+	public void setMatrix(Color[][] matrix)
+	{
+		this.matrix = matrix;
+	}
+
+	public void changeMatrixToFit(int cellSize, int windowWidth, int windowHeight)
+	{
+		height = windowHeight / cellSize;
+		width = windowWidth / cellSize;
+		setMatrix(new Color[height][width]);
+		fillBackground();
 	}
 }

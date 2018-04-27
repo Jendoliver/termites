@@ -14,7 +14,7 @@ public class AntBasic implements AntAlgorithm
 	public AntBasic(Board board)
 	{
 		this.board = board;
-		spawnAt(board.getHeight() / 2, board.getWidth() / 2);
+		spawnAtCenter();
 		pattern = PatternFactory.createLangton(); // Default is Langton's Ant Pattern
 	}
 
@@ -22,6 +22,11 @@ public class AntBasic implements AntAlgorithm
 	{
 		this.i = row > 0 ? Math.min(row, board.getHeight() - 1) : 0;
 		this.j = col > 0 ? Math.min(col, board.getWidth() - 1) : 0;
+	}
+
+	public void spawnAtCenter()
+	{
+		spawnAt(board.getHeight() / 2, board.getWidth() / 2);
 	}
 
 	public Pattern getPattern()
@@ -34,11 +39,16 @@ public class AntBasic implements AntAlgorithm
 		this.pattern = pattern;
 	}
 
+	public Board getBoard()
+	{
+		return board;
+	}
+
 	public void setPatternAndRestart(Pattern pattern)
 	{
 		setPattern(pattern);
-		board.clear();
-		spawnAt(board.getHeight() / 2, board.getWidth() / 2);
+		board.fillBackground();
+		spawnAtCenter();
 	}
 
 	@Override

@@ -9,8 +9,6 @@ public class RendererPure extends Renderer
 {
 	private static final long serialVersionUID = 8069373575126492595L;
 
-	private static int cellSize = 5;
-
 	public RendererPure(Board board)
 	{
 		super(board);
@@ -28,15 +26,5 @@ public class RendererPure extends Renderer
 				g.fillRect(j * cellSize, i * cellSize, cellSize, cellSize);
 			}
 		}
-	}
-
-	public static int getCellSize()
-	{
-		return cellSize;
-	}
-
-	public static void setCellSize(int cellSize)
-	{
-		RendererPure.cellSize = cellSize;
 	}
 }

@@ -18,67 +18,43 @@ import javax.swing.SwingConstants;
 import com.jendoliver.termites.factory.PatternFactory;
 import com.jendoliver.termites.model.AntAlgorithm;
 import com.jendoliver.termites.model.AntBasic;
+import com.jendoliver.termites.model.Pattern;
 import com.jendoliver.termites.properties.ApplicationProperties;
 
 public class AntControlPanel extends JPanel
 {
+	private static final String YU_GOTHIC_UI = "Yu Gothic UI";
+
 	private transient AntBasic ant;
 
 	public static final int WINDOW_WIDTH = 1200;
 	public static final int WINDOW_HEIGHT = 150;
 
+	JSpinner msBetweenFrames;
+	JSpinner cellSize;
+
 	public AntControlPanel(AntBasic ant)
 	{
 		this.ant = ant;
 
-		setSize(new Dimension(WINDOW_WIDTH, WINDOW_HEIGHT));
+		setSize(new Dimension(1200, 120));
 
 		setLayout(null);
 
 		JLabel lblPattern = new JLabel("Pattern properties");
-		lblPattern.setFont(new Font("Yu Gothic UI", Font.PLAIN, 25));
-		lblPattern.setBounds(37, 11, 220, 34);
+		lblPattern.setFont(new Font("Yu Gothic UI", Font.PLAIN, 18));
+		lblPattern.setBounds(63, 0, 176, 34);
 		add(lblPattern);
 
-		JSeparator separator = new JSeparator();
-		separator.setOrientation(SwingConstants.VERTICAL);
-		separator.setBounds(300, 11, 2, 128);
-		add(separator);
-
-		JSpinner msBetweenFrames = new JSpinner();
+		msBetweenFrames = new JSpinner();
 		msBetweenFrames.setModel(new SpinnerNumberModel(1, 1, 1000, 1));
-		msBetweenFrames.setBounds(480, 56, 90, 20);
+		msBetweenFrames.setBounds(480, 34, 90, 14);
 		add(msBetweenFrames);
 
-		JButton btnSimulate = new JButton("SIMULATE");
-		btnSimulate.addMouseListener(new MouseAdapter()
-		{
-			@Override
-			public void mouseClicked(MouseEvent arg0)
-			{
-				ant.setPatternAndRestart(PatternFactory.createFromString(turnsPattern.getText()));
-				Applet.setRefreshRate((Integer)msBetweenFrames.getValue());
-				try
-				{
-					msBetweenFrames.commitEdit();
-					Applet.setRefreshRate((Integer)msBetweenFrames.getValue());
-				}
-				catch (java.text.ParseException e) { /* Ignored */ }
-			}
-		});
-		btnSimulate.setFont(new Font("Yu Gothic UI", Font.BOLD, 20));
-		btnSimulate.setBounds(867, 23, 190, 95);
-		add(btnSimulate);
-
 		JLabel lblRenderProperties = new JLabel("Render properties");
-		lblRenderProperties.setFont(new Font("Yu Gothic UI", Font.PLAIN, 25));
-		lblRenderProperties.setBounds(350, 11, 220, 34);
+		lblRenderProperties.setFont(new Font("Yu Gothic UI", Font.PLAIN, 18));
+		lblRenderProperties.setBounds(364, 0, 220, 34);
 		add(lblRenderProperties);
-
-		JSeparator separator2 = new JSeparator();
-		separator2.setOrientation(SwingConstants.VERTICAL);
-		separator2.setBounds(607, 11, 2, 128);
-		add(separator2);
 
 		JButton btnRandomize = new JButton("RANDOMIZE");
 		btnRandomize.addMouseListener(new MouseAdapter()
@@ -86,59 +62,106 @@ public class AntControlPanel extends JPanel
 			@Override
 			public void mouseClicked(MouseEvent arg0)
 			{
-				ant.setPatternAndRestart(
-						PatternFactory.createRandom(ApplicationProperties.getMaxPatternSize()));
-
-				turnsPattern.setText(ant.getPattern().toString());
-
-				try
-				{
-					msBetweenFrames.commitEdit();
-					Applet.setRefreshRate((Integer)msBetweenFrames.getValue());
-				}
-				catch (java.text.ParseException e) { /* Ignored */ }
+				regenerateScene(PatternFactory.createRandom(ApplicationProperties.getMaxPatternSize()));
 			}
 		});
-		btnRandomize.setFont(new Font("Yu Gothic UI", Font.BOLD, 20));
-		btnRandomize.setBounds(644, 23, 190, 95);
+
+		JButton btnSimulate = new JButton("SIMULATE");
+		btnSimulate.addMouseListener(new MouseAdapter()
+		{
+			@Override
+			public void mouseClicked(MouseEvent arg0)
+			{
+				regenerateScene(PatternFactory.createFromString(turnsPattern.getText()));
+			}
+		});
+
+		btnRandomize.setFont(new Font(YU_GOTHIC_UI, Font.BOLD, 20));
+		btnRandomize.setBounds(963, 22, 190, 35);
 		add(btnRandomize);
 
+		btnSimulate.setFont(new Font(YU_GOTHIC_UI, Font.BOLD, 20));
+		btnSimulate.setBounds(963, 68, 190, 34);
+		add(btnSimulate);
+
 		JLabel lblTurns = new JLabel("Turns:");
-		lblTurns.setFont(new Font("Yu Gothic UI", Font.PLAIN, 15));
-		lblTurns.setBounds(25, 56, 46, 14);
+		lblTurns.setFont(new Font("Yu Gothic UI", Font.PLAIN, 11));
+		lblTurns.setBounds(25, 43, 46, 14);
 		add(lblTurns);
 
 		turnsPattern = new JTextField();
 		turnsPattern.setToolTipText("The turn direction associated with each color");
 		turnsPattern.setText("LR");
-		turnsPattern.setBounds(81, 56, 176, 20);
+		turnsPattern.setBounds(84, 45, 176, 18);
 		add(turnsPattern);
 		turnsPattern.setColumns(10);
 
 		JLabel lblColors = new JLabel("Colors:");
-		lblColors.setFont(new Font("Yu Gothic UI", Font.PLAIN, 15));
-		lblColors.setBounds(25, 98, 46, 14);
+		lblColors.setFont(new Font("Yu Gothic UI", Font.PLAIN, 11));
+		lblColors.setBounds(25, 74, 46, 14);
 		add(lblColors);
 
 		JLabel lblNewLabel = new JLabel("TBA");
-		lblNewLabel.setFont(new Font("Yu Gothic UI", Font.BOLD | Font.ITALIC, 13));
-		lblNewLabel.setBounds(131, 104, 46, 14);
+		lblNewLabel.setFont(new Font(YU_GOTHIC_UI, Font.BOLD | Font.ITALIC, 13));
+		lblNewLabel.setBounds(232, 75, 46, 14);
 		add(lblNewLabel);
 
 		JLabel lblMsBetweenFrames = new JLabel("Ms between frames:");
-		lblMsBetweenFrames.setFont(new Font("Yu Gothic UI", Font.PLAIN, 15));
-		lblMsBetweenFrames.setBounds(320, 56, 150, 14);
+		lblMsBetweenFrames.setFont(new Font("Yu Gothic UI", Font.PLAIN, 11));
+		lblMsBetweenFrames.setBounds(320, 34, 150, 14);
 		add(lblMsBetweenFrames);
 
 		JLabel lblRenderingStyle = new JLabel("Rendering style:");
-		lblRenderingStyle.setFont(new Font("Yu Gothic UI", Font.PLAIN, 15));
-		lblRenderingStyle.setBounds(320, 88, 150, 34);
+		lblRenderingStyle.setFont(new Font("Yu Gothic UI", Font.PLAIN, 11));
+		lblRenderingStyle.setBounds(320, 61, 150, 17);
 		add(lblRenderingStyle);
 
 		JLabel label = new JLabel("TBA");
-		label.setFont(new Font("Yu Gothic UI", Font.BOLD | Font.ITALIC, 13));
-		label.setBounds(503, 101, 46, 14);
+		label.setFont(new Font(YU_GOTHIC_UI, Font.BOLD | Font.ITALIC, 13));
+		label.setBounds(525, 62, 46, 14);
 		add(label);
+
+		JLabel lblCellSize = new JLabel("Cell size:");
+		lblCellSize.setFont(new Font("Yu Gothic UI", Font.PLAIN, 11));
+		lblCellSize.setBounds(320, 86, 150, 16);
+		add(lblCellSize);
+
+		JSeparator separator3 = new JSeparator();
+		separator3.setOrientation(SwingConstants.VERTICAL);
+		separator3.setBounds(918, 11, 2, 97);
+		add(separator3);
+
+		JSeparator separator = new JSeparator();
+		separator.setOrientation(SwingConstants.VERTICAL);
+		separator.setBounds(626, 11, 2, 97);
+		add(separator);
+
+		JSeparator separator2 = new JSeparator();
+		separator2.setOrientation(SwingConstants.VERTICAL);
+		separator2.setBounds(283, 15, 2, 97);
+		add(separator2);
+
+		cellSize = new JSpinner();
+		cellSize.setModel(new SpinnerNumberModel(5, 1, 100, 1));
+		cellSize.setBounds(480, 88, 90, 14);
+		add(cellSize);
+	}
+
+	private void regenerateScene(Pattern pattern)
+	{
+		ant.setPatternAndRestart(pattern);
+		turnsPattern.setText(ant.getPattern().toString());
+
+		try
+		{
+			msBetweenFrames.commitEdit();
+			cellSize.commitEdit();
+			Applet.getInstance().setRefreshRate((Integer)msBetweenFrames.getValue());
+		}
+		catch (java.text.ParseException e) { /* Ignored */ }
+
+		Applet.getInstance().getRenderer().setCellSize((Integer)cellSize.getValue());
+		ant.spawnAtCenter();
 	}
 
 	public AntAlgorithm getAnt()
